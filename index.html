@@ -1,7 +1,70 @@
 <!DOCTYPE html>
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-</head>
-<body>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+	<!-- Appears on tab/window -->
+	<title>Game of Life</title>
 
-</body>
+	<!-- basic shader -->
+	<script type="glsl" id="standard-vs">
+		void main(){
+			gl_Position = vec4(0.0, 0.0, 0.0, 1);
+			gl_PointSize = 500.0;
+		}
+	</script>
+	<script type="glsl" id="standard-fs">
+		void main(){
+			gl_FragColor = vec4(1, 0, 0, 1);
+		}
+	</script>
+
+	<script language="javascript">
+		function onReady(){
+			//Get the canvas element
+    		var canvas = document.getElementById("gl");
+
+    		//Set up rendering context
+    		var gl = canvas.getContext("webgl") ||
+    				canvas.getContext("experimental-webgl") ||
+    				canvas.getContext("moz-webgl") ||
+    				canvas.getContext("webkit-3d");
+
+    		//Final support check
+    		if(gl){
+    			var extensions = gl.getSupportedExtensions();
+
+    			console.log(gl);
+    			console.log(extensions);
+
+    			//Set up viewport
+    			gl.viewportWidth = canvas.width;
+    			gl.viewportHeight = canvas.height;
+
+    			//Set up canvas for clearing
+    			gl.clearColor(0, 1, 1, 1.0);
+    			gl.clear(gl.COLOR_BUFFER_BIT);
+
+    			//Get shaders
+    			var vs = document.getElementById("standard-vs").innerHTML;
+    			var fs = document.getElementById("standard-fs").innerHTML;
+
+    			//Initialize shaders
+    			var standardProgram = IntializeShader(gl, vs, fs);
+
+    			//Select shader
+    			gl.useProgram(standardProgram);
+
+    			//Draw to screen
+    			gl.drawArrays(gl.POINT, 0, 1);
+    		}
+    		else{
+    			console.log("Your browser doesn't support OpenGL");
+    		}
+    	}
+    </script>
+
+    <script type="text/javascript" src="shader.js"></script>
+</head>
+<body onload="onReady()">
+  <canvas width="640" height="480" id="gl"></canvas>
+  
+</body></html>
